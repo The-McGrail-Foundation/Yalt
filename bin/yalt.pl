@@ -40,6 +40,8 @@ sub parse_input($$);
 sub alert_email_ok($$);
 sub alert_email_ko($$);
 
+our $VERSION = 0.1;
+
 my %opts;
 our $mailfrom;
 our $mailto;

@@ -18,6 +18,8 @@ package Yalt::Actions;
 
 use Yalt::Sys;
 
+our $VERSION = 0.1;
+
 sub email($$$) {
   my $status = shift;
   my $service = shift;
