@@ -18,8 +18,6 @@ package Yalt::Actions;
 
 use Yalt::Sys;
 
-our $VERSION = 0.1;
-
 sub email($$$) {
   my $status = shift;
   my $service = shift;
@@ -29,31 +27,47 @@ sub email($$$) {
 
   my $server = Yalt::Sys::get_hostname;
   my $subject;
-  my $params;
+  my @params;
   my $data;
 
   if($status eq 0) {
     if(ref $service{subject_ko_params} eq 'CODE') {
-      $params = $service{subject_ko_params}();
+      $params[0] = $service{subject_ko_params}();
+    } elsif(ref $service{subject_ko_params} eq 'ARRAY') {
+      foreach my $srvparm ( @{$service{subject_ko_params}} ) {
+        if(ref $srvparm eq 'CODE') {
+          push(@params, &$srvparm($error));
+        } else {
+          push(@params, $srvparm);
+        }
+      }
     } else {
-      $params = $service{subject_ko_params};
+      $params[0] = $service{subject_ko_params};
     }
 
     if(defined $service{subject_ko}) {
-      $subject = sprintf($service{subject_ko}, $params);
+      $subject = sprintf($service{subject_ko}, @params);
     } else {
       $subject = "Problem detected in service " . uc($service{description}) . " on host " . $server;
     }
     $data = "A problem in service $service{description} has been detected:\n\n" . $error;
   } elsif($status eq 1) {
     if(ref $service{subject_ok_params} eq 'CODE') {
-      $params = $service{subject_ok_params}();
+      $params[0] = $service{subject_ok_params}();
+    } elsif(ref $service{subject_ko_params} eq 'ARRAY') {
+      foreach my $srvparm ( @{$service{subject_ko_params}} ) {
+        if(ref $srvparm eq 'CODE') {
+          push(@params, &$srvparm($error));
+        } else {
+          push(@params, $srvparm);
+        }
+      }
     } else {
-      $params = $service{subject_ok_params};
+      $params[0] = $service{subject_ok_params};
     }
 
     if(defined $service{subject_ok}) {
-      $subject = sprintf($service{subject_ok}, $params);
+      $subject = sprintf($service{subject_ok}, @params);
     } else {
       $subject = "Problem detected in service " . uc($service{description}) . " on host " . $server;
     }

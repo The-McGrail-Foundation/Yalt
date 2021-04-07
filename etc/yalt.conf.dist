@@ -21,6 +21,8 @@ our %checks;
 
 $checks{CLAMAV}{textko} = 'Could not connect to clamd daemon';
 $checks{CLAMAV}{textok} = 'SelfCheck: Database status OK';
+$checks{CLAMAV}{subject_ko} = 'Clamd not running on host %s';
+$checks{CLAMAV}{subject_ko_params}[0] = \&Yalt::Sys::get_hostname;
 $checks{CLAMAV}{description} = "Clamav";
 $checks{CLAMAV}{timelimit} = 180;
 $checks{CLAMAV}{maxfailures} = 0;
