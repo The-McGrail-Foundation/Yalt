@@ -18,7 +18,7 @@ package Yalt::Actions;
 
 use Yalt::Sys;
 
-sub __init($$$) {
+sub init($$$) {
   my $status = shift;
   my $service = shift;
   my %service = %{$service};
@@ -89,7 +89,7 @@ sub email($$$) {
   my $subject;
   my $data;
 
-  ($subject, $data) = __init($status, $service, $error);
+  ($subject, $data) = init($status, $service, $error);
 
   if(defined $service{from} and defined $service{to}) {
     $mailfrom = $service{from};
