@@ -18,7 +18,7 @@ package Yalt::Sys;
 
 use Sys::Hostname;
 
-our $VERSION = 0.1;
+our $VERSION = 0.2;
 
 sub get_myhostname {
   return hostname;
