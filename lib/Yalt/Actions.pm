@@ -25,7 +25,7 @@ sub init($$$) {
   my $error = shift;
   my ($mailfrom, $mailto, $mailcc);
 
-  my $server = Yalt::Sys::get_hostname;
+  my $server = Yalt::Sys::get_myhostname;
   my $subject;
   my @params;
   my $data;

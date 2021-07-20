@@ -12,4 +12,4 @@ plan tests => 1;
 use Yalt::Sys;
 use Sys::Hostname;
 
-is(Yalt::Sys::get_hostname, hostname);
+is(Yalt::Sys::get_myhostname, hostname);

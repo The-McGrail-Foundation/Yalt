@@ -20,7 +20,7 @@ use Sys::Hostname;
 
 our $VERSION = 0.1;
 
-sub get_hostname {
+sub get_myhostname {
   return hostname;
 }
 
