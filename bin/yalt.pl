@@ -145,9 +145,6 @@ sub parse_input($$) {
     if ((defined $checks{$service}{last_failure_notify}) and (time() - $checks{$service}{last_failure_notify}) > $checks{$service}{timelimit}) {
       if($checks{$service}{alert_once} eq 0) {
         $logerr = join("\n", @{$checks{$service}{errors}});
-        if (defined $checks{$service}{prev_line} and ($checks{$service}{prev_lines} > 0)) {
-          $logerr .= "\n\nPrevious log line:\n" . $checks{$service}{prev_line};
-        }
         $checks{$service}{action}(1, $checks{$service}, $logerr);
       }
       undef $logerr;
