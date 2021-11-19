@@ -54,8 +54,8 @@ sub init($$$) {
   } elsif($status eq 1) {
     if(ref $service{subject_ok_params} eq 'CODE') {
       $params[0] = $service{subject_ok_params}();
-    } elsif(ref $service{subject_ko_params} eq 'ARRAY') {
-      foreach my $srvparm ( @{$service{subject_ko_params}} ) {
+    } elsif(ref $service{subject_ok_params} eq 'ARRAY') {
+      foreach my $srvparm ( @{$service{subject_ok_params}} ) {
         if(ref $srvparm eq 'CODE') {
           push(@params, &$srvparm($error));
         } else {
