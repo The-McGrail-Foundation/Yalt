@@ -107,13 +107,31 @@ sub email($$$) {
     }
   }
 
+  my $tpl = "template/email.tpl";
+  my $content;
+  my $html = 0;
+  if(-f $tpl) {
+    open(my $fh, '<', $tpl) or die "cannot open file $tpl";
+    {
+        local $/;
+        $content = <$fh>;
+    }
+    close($fh);
+    $data =~ s/\n/<BR>/g;
+    $content =~ s/%SUBJECT%/$subject/g;
+    $content =~ s/%DATA%/$data/g;
+    $html = 1;
+  } else {
+    $content = $data;
+  }
   my $msg = MIME::Lite->new(
                      From     => $mailfrom,
                      To       => $mailto,
                      Cc       => $mailcc,
                      Subject  => $subject,
-                     Data     => $data,
+                     Data     => $content,
                      );
+  $msg->attr("content-type" => "text/html") if $html eq 1;
   $msg->send;
 }
 
