@@ -27,8 +27,8 @@ $checks{CLAMAV}{description} = "Clamav";
 $checks{CLAMAV}{timelimit} = 180;
 $checks{CLAMAV}{maxfailures} = 0;
 $checks{CLAMAV}{alert_once} = 0;
-# Print previous log line as well
-# $checks{CLAMAV}{prev_lines} = 1;
+# Print previous log lines as well
+# $checks{CLAMAV}{prev_lines} = 3;
 $checks{CLAMAV}{from} = 'server@example.org';
 $checks{CLAMAV}{to} = 'sysadmin@example.org';
 $checks{CLAMAV}{action} = \&Yalt::Actions::email;

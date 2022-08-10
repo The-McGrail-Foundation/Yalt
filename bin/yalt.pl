@@ -121,10 +121,15 @@ sub parse_input($$) {
         if($checks{$service}{failures} >= $checks{$service}{maxfailures}) {
           $logerr = join("\n", @{$checks{$service}{errors}});
           if (defined $checks{$service}{prev_line} and ($checks{$service}{prev_lines} > 0)) {
-            $logerr .= "\n\nPrevious log line:\n" . $checks{$service}{prev_line};
+            $logerr .= "\n\nPrevious log lines:\n";
+            for (my $cnt = 0; $cnt <= $checks{$service}{prev_lines}; $cnt++) {
+              my $logline = $checks{$service}{prev_line}[$cnt];
+              $logerr .= $logline . "\n";
+            }
           }
           $checks{$service}{action}(0, $checks{$service}, $logerr);
           undef $logerr;
+          delete $checks{$service}{prev_line};
           $checks{$service}{first_notify} = 0;
           $checks{$service}{last_failure_notify} = time();
         }
@@ -148,13 +153,14 @@ sub parse_input($$) {
         $checks{$service}{action}(1, $checks{$service}, $logerr);
       }
       undef $logerr;
+      delete $checks{$service}{prev_line};
       $checks{$service}{last_error} = undef;
       $checks{$service}{failures} = 0;
       $checks{$service}{first_notify} = 1;
       $checks{$service}{last_failure_notify} = undef;
       delete $checks{$service}{errors};
     }
-    $checks{$service}{prev_line} = $line;
+    push(@{$checks{$service}{prev_line}}, $line);
   }
 }
 
