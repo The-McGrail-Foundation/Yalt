@@ -120,7 +120,7 @@ sub parse_input($$) {
       if ($checks{$service}{first_notify}) {
         if($checks{$service}{failures} >= $checks{$service}{maxfailures}) {
           $logerr = join("\n", @{$checks{$service}{errors}});
-          if (defined $checks{$service}{prev_line} and ($checks{$service}{prev_lines} > 0)) {
+          if (defined $checks{$service}{prev_line} and defined $checks{$service}{prev_lines} and ($checks{$service}{prev_lines} > 0)) {
             $logerr .= "\n\nPrevious log lines:\n";
             for (my $cnt = 0; $cnt <= $checks{$service}{prev_lines}; $cnt++) {
               my $logline = $checks{$service}{prev_line}[$cnt];
