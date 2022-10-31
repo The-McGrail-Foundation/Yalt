@@ -16,6 +16,8 @@
 
 package Yalt::Actions;
 
+use MIME::Lite;
+
 use Yalt::Sys;
 
 sub init($$$) {
@@ -124,14 +126,39 @@ sub email($$$) {
   } else {
     $content = $data;
   }
-  my $msg = MIME::Lite->new(
+  my $msg;
+  if($html eq 1) {
+    $msg = MIME::Lite->new(
                      From     => $mailfrom,
                      To       => $mailto,
                      Cc       => $mailcc,
                      Subject  => $subject,
-                     Data     => $content,
+                     Disposition => 'inline',
+                     Type    =>'multipart/related'
                      );
-  $msg->attr("content-type" => "text/html") if $html eq 1;
+    $part = MIME::Lite->new(
+       Type     => 'text/html',
+       Data     => $content,
+    );
+    $part->attr('content-type.charset' => 'UTF-8');
+    $msg->attach($part);
+    if(-f "$tpl.png") {
+      my $img_id = (split(/\//, $tpl))[1];
+      $msg->attach(
+        Type => 'image/png',
+        Id   => "$img_id.png",
+        Path => "$tpl.png",
+      );
+    }
+  } else {
+    $msg = MIME::Lite->new(
+                    From     => $mailfrom,
+                    To       => $mailto,
+                    Cc       => $mailcc,
+                    Subject  => $subject,
+                    Data     => $content,
+                    );
+  }
   $msg->send;
 }
 
