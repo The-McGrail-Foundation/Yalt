@@ -115,6 +115,7 @@ sub email($$$) {
   if(-f $tpl) {
     open(my $fh, '<', $tpl) or die "cannot open file $tpl";
     {
+        binmode($fh, ":encoding(UTF-8)");
         local $/;
         $content = <$fh>;
     }
