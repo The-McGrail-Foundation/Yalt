@@ -32,5 +32,6 @@ $checks{CLAMAV}{alert_once} = 0;
 $checks{CLAMAV}{from} = 'server@example.org';
 $checks{CLAMAV}{to} = 'sysadmin@example.org';
 $checks{CLAMAV}{action} = \&Yalt::Actions::email;
+$checks{CLAMAV}{filename} = '/var/log/maillog';
 
 our @services = qw(CLAMAV);

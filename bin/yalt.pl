@@ -36,9 +36,9 @@ foreach my $plugin (@plugins) {
 }
 };
 
-sub parse_input($$);
+sub parse_input($$$);
 
-our $VERSION = 0.1;
+our $VERSION = 0.2;
 
 my %opts;
 our $mailfrom;
@@ -102,25 +102,30 @@ foreach my $filename (@files_to_tail) {
         );
       },
       got_input => sub {
-        parse_input($_[ARG0],\@services),
+        parse_input($_[ARG0],$filename,\@services),
       },
     }
   );
 }
 
-sub parse_input($$) {
+sub parse_input($$$) {
   my $line = shift;
+  my $filename = shift;
   my $services = shift;
   my @services = @{$services};
   my $logerr;
 
   foreach my $service ( @services ) {
+    next if ((defined $checks{$service}{filename}) and ($checks{$service}{filename} ne $filename));
     if ((defined $checks{$service}{textko}) and ($line =~ /$checks{$service}{textko}/)) {
       push(@{$checks{$service}{errors}}, $line);
       if ($checks{$service}{first_notify}) {
         if($checks{$service}{failures} >= $checks{$service}{maxfailures}) {
           $logerr = join("\n", @{$checks{$service}{errors}});
           if (defined $checks{$service}{prev_line} and defined $checks{$service}{prev_lines} and ($checks{$service}{prev_lines} > 0)) {
+            if($checks{$service}{prev_line} =~ /$checks{$service}{ignore_prev}/) {
+              next;
+            }
             $logerr .= "\n\nPrevious log lines:\n";
             for (my $cnt = 0; $cnt <= $checks{$service}{prev_lines}; $cnt++) {
               my $logline = $checks{$service}{prev_line}[$cnt];
